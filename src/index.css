@@ -1,6 +1,6 @@
 body {
   /* background: rgb(3, 140, 136); */
-  background: #fcb454;
+  background: #1B3C53;
   padding: 0px;
   margin: 0px;
 }
@@ -168,7 +168,7 @@ body {
   margin-top: 1px;
 }
 .structured-response-container {
-  background-color: #fff085;
+  background-color: #456882;
   border: 3px solid black;
   border-radius: 20px;
   padding: 10px;
@@ -185,7 +185,7 @@ body {
 }
 
 .meal-response-container::-webkit-scrollbar-track {
-  background: #fff085;
+  background: #456882;
   border-radius: 10px;
 }
 

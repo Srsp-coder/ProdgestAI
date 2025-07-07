@@ -91,7 +91,7 @@ function App() {
           padding: "0px",
         }}
       >
-        ProddiBot
+        ProdGestAI
       </h1>
       <div className="ai-query-bot-container">
         <div className="query-input-container">

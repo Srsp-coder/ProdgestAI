@@ -232,7 +232,7 @@ app.post("/product-suggest", async (req, res) => {
 You are a product assistant. Choose the best matching table from:
 ${TABLE_LIST.join(", ")}
 User said: "${userPrompt}"
-Return only exact table name or "Unknown".
+Strictly Return only exact table name or "Unknown".
 Return only exact table name from the list above (case-sensitive). Do not add punctuation.`;
 
   let chosenTable = "Unknown";
@@ -275,6 +275,7 @@ Return only exact table name from the list above (case-sensitive). Do not add pu
   console.log("📦 Available Categories:", categoryList);
 
   // Step 3: Extract JSON
+  const includeSize = chosenTable === "cloth_accessories";
   const extractPrompt = `
 You are a smart product filter extractor.
 User query: "${userPrompt}"
@@ -283,11 +284,14 @@ ${categoryList.map((c) => `- ${c}`).join("\n")}
 
 Return this JSON:
 {
-  "table": "${chosenTable}",
+  "source_table": "${chosenTable}",
   "sub_category": "exact match from list above or null",
   "color": "if mentioned, else null",
   "brand": "if mentioned, else null",
-  "budget": "if mentioned (numeric), else null"
+  "budget": "if mentioned (numeric), else null",
+  "min_rating": "if mentioned (numeric) or implied (e.g., 'very good' = 4, 'excellent' or 'best' = 4.5+), else null"${
+    includeSize ? ',\n  "size": "if mentioned, else null"' : ""
+  }
 }
   Do not guess similar categories (e.g., "men's clothing"). Match exactly.
   Respond ONLY with clean JSON. Do not add explanations or markdown.`;
@@ -302,7 +306,10 @@ Return this JSON:
     console.log("🧾 Groq Raw Extract:", content);
 
     content = content.replace(/```json|```/g, "");
-    const parsed = JSON.parse(content);
+    const firstClosingBrace = content.indexOf("}") + 1;
+    const jsonString = content.slice(0, firstClosingBrace);
+    const parsed = JSON.parse(jsonString);
+    parsed.table = chosenTable;
 
     if (!parsed.sub_category || !categoryList.includes(parsed.sub_category)) {
       console.warn("⚠️ Groq returned unknown category. Applying fallback.");
@@ -320,7 +327,15 @@ Return this JSON:
 });
 
 app.post("/api/product-search", async (req, res) => {
-  const { table: table_name, sub_category, budget, color, brand } = req.body;
+  const {
+    table: table_name,
+    sub_category,
+    budget,
+    color,
+    brand,
+    min_rating,
+    size,
+  } = req.body;
 
   console.log("📥 Product Search Input:", {
     table_name,
@@ -337,7 +352,7 @@ app.post("/api/product-search", async (req, res) => {
 
   const TABLE_SCHEMAS = {
     Groceries: ["sub_category"],
-    cloth_accessories: ["sub_category", "color"],
+    cloth_accessories: ["sub_category", "color", "size"],
     Electronics: ["sub_category"],
     body_care_diet: ["sub_category", "color"],
     pet: ["sub_category"],
@@ -353,6 +368,8 @@ app.post("/api/product-search", async (req, res) => {
     console.log("➡️ Budget:", budget);
     console.log("➡️ Color:", color);
     console.log("➡️ Brand:", brand);
+    console.log("➡️ rating:", min_rating);
+    console.log("➡️ size:", size);
 
     let query = supabase
       .from(table_name)
@@ -363,6 +380,13 @@ app.post("/api/product-search", async (req, res) => {
     }
     if (color && allowed.includes("color")) {
       query = query.ilike("color", `%${color.trim().toLowerCase()}%`); // ✅ UPDATED
+    }
+    if (min_rating !== null && !isNaN(min_rating)) {
+      query = query.gte("rating", parseFloat(min_rating));
+    }
+
+    if (size && allowed.includes("size")) {
+      query = query.ilike("size", `%${size.trim().toLowerCase()}%`);
     }
 
     const { data, error } = await query;
@@ -381,7 +405,10 @@ app.post("/api/product-search", async (req, res) => {
       image: item.image_url,
       sub_category: item.sub_category,
     }));
-
+    console.log(
+      "🆔 Product IDs:",
+      results.map((item) => item.id)
+    );
     console.log("✅ Fetched Products:", results.length);
     res.json({ results });
   } catch (err) {
