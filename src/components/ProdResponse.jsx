@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 function ProdResponse({ response, onRegenerate, scrollRef, hasQueried }) {
+  const [hovered, setHovered] = useState(false);
   const scrollToTop = () => {
     setTimeout(() => {
       if (scrollRef?.current) {
@@ -113,7 +114,11 @@ function ProdResponse({ response, onRegenerate, scrollRef, hasQueried }) {
             border: "none",
             cursor: "pointer",
             boxShadow: "3px 3px 0px #222",
+            transform: hovered ? "translate(-4px, -4px)" : "translate(0, 0)",
+            transition: "transform 0.2s ease",
           }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
           🔁 Regenerate Suggestions
         </button>

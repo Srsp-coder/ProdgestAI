@@ -76,7 +76,7 @@ function App() {
       ></img> */}
       <h1
         style={{
-          color: "#fff085",
+          color: "#E9F5BE",
           margin: "0px",
           textShadow: `
       -1px -1px 0 black,
@@ -100,60 +100,63 @@ function App() {
               {/*<ImageUpload onImageSelect={setImageFile} />*/}
               <AudioRecord onTranscriptionReady={handleTranscription} />
             </div>
-            <div className="structured-response-container">
-              <h3
-                style={{
-                  textAlign: "left",
-                  fontFamily: "'Merienda', cursive",
-                  fontOpticalSizing: "auto",
-                  fontWeight: "900",
-                  fontStyle: "normal",
-                }}
-              >
-                Products:
-              </h3>
-              <hr
-                style={{
-                  border: "none",
-                  height: "2px",
-                  background: "black",
-                }}
-              ></hr>
-              {/* <QueryResponse
+            <div className="gradient-border-wrapper">
+              <div className="structured-response-container">
+                <h3
+                  style={{
+                    textAlign: "left",
+                    fontFamily: "'Merienda', cursive",
+                    fontOpticalSizing: "auto",
+                    fontWeight: "900",
+                    fontStyle: "normal",
+                  }}
+                >
+                  Products:
+                </h3>
+                <hr
+                  style={{
+                    border: "none",
+                    height: "2px",
+                    background: "black",
+                  }}
+                ></hr>
+                {/* <QueryResponse
           response={response}
           transcription={transcription}
           lang="en-IN"
         /> */}
-              <div
-                ref={scrollRef}
-                style={{
-                  height: "400px",
-                  overflowY: "scroll" /* 👈 Always shows vertical scrollbar */,
-                  overflowX: "hidden",
-                  scrollbarGutter: "stable",
-                  padding: "10px",
-                }}
-                className="meal-response-container"
-              >
-                {loading ? (
-                  <p style={{ fontStyle: "italic" }}>
-                    🔄 Searching for products...
-                  </p>
-                ) : response.length === 0 && hasSearched ? ( // ✅ Only show after search
-                  <p style={{ fontStyle: "italic", color: "gray" }}>
-                    No products found.
-                  </p>
-                ) : (
-                  <ProdResponse
-                    response={response}
-                    onRegenerate={() => queryResponse(originalPrompt)}
-                    onConfirm={(ingredients) =>
-                      handleUserDecision("yes", ingredients)
-                    }
-                    scrollRef={scrollRef}
-                    hasQueried={hasQueried}
-                  />
-                )}
+                <div
+                  ref={scrollRef}
+                  style={{
+                    height: "400px",
+                    overflowY:
+                      "scroll" /* 👈 Always shows vertical scrollbar */,
+                    overflowX: "hidden",
+                    scrollbarGutter: "stable",
+                    padding: "10px",
+                  }}
+                  className="meal-response-container"
+                >
+                  {loading ? (
+                    <p style={{ fontStyle: "italic" }}>
+                      🔄 Searching for products...
+                    </p>
+                  ) : response.length === 0 && hasSearched ? ( // ✅ Only show after search
+                    <p style={{ fontStyle: "italic", color: "gray" }}>
+                      No products found.
+                    </p>
+                  ) : (
+                    <ProdResponse
+                      response={response}
+                      onRegenerate={() => queryResponse(originalPrompt)}
+                      onConfirm={(ingredients) =>
+                        handleUserDecision("yes", ingredients)
+                      }
+                      scrollRef={scrollRef}
+                      hasQueried={hasQueried}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -171,7 +174,7 @@ function App() {
               className="query-submit-button"
               sx={{
                 fontSize: 40,
-                color: "#fff085",
+                color: "#E9F5BE",
                 textShadow: "2px 2px 5px rgba(0, 0, 0, 0.8)",
                 filter: "drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.8))",
               }}

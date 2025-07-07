@@ -109,9 +109,9 @@ function AudioRecord(props) {
               minHeight: "510px",
               margin: "20px auto", // ✅ horizontally center it
               paddingLeft: "20px",
-              background: "#fff085",
+              background: "#E9F5BE",
               marginBottom: "15px",
-              border: "3px solid black",
+              border: "4px solid black",
               borderRadius: "20px",
               boxShadow: "5px 10px 8px 5px rgba(0, 0, 0, 0.8)",
             }
@@ -121,10 +121,10 @@ function AudioRecord(props) {
               minHeight: "510px",
               margin: "20px auto", // ✅ horizontally center it
               paddingLeft: "20px",
-              background: "#fff085",
+              background: "#E9F5BE",
               marginBottom: "15px",
               borderRadius: "20px",
-              border: "3px solid black",
+              border: "4px solid black",
               transition: "0.3s",
               boxShadow: "5px 10px 8px 5px rgba(0, 0, 0, 0.8)",
             }
